@@ -2,17 +2,18 @@
 import styles from "./NotesForm.module.css";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import MdEditor from "@/components/MdEditor";
 
 export function NotesForm({ note }: { note?: any }) {
+    const router = useRouter();
 
+    // Estados
     const [title, setTitle] = useState("");
     const [content, setContent] = useState("");
     const [showSuccess, setShowSuccess] = useState(false);
     const [showError, setShowError] = useState(false);
 
-    const router = useRouter();
-
-    // Rellena el formulario cuando llega una nota para editar
+    // Rellena el formulario si llega una nota para editar
     useEffect(() => {
         if (note) {
             setTitle(note.title);
@@ -23,16 +24,16 @@ export function NotesForm({ note }: { note?: any }) {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        // --- VALIDACIÓN ---
+        // Validación: revisa que no estén vacíos 
         if (!title.trim() || !content.trim()) {
             setShowError(true);
             setTimeout(() => setShowError(false), 3000);
             return;
         }
 
-        // --- LÓGICA DIFERENCIADA ---
+        // LÓGICA DE GUARDADO
         if (note) {
-            // ==> MODO EDICIÓN (PUT)
+            //  MODO EDICIÓN (PUT)
             const res = await fetch(`/api/notes/${note.id}`, {
                 method: 'PUT',
                 body: JSON.stringify({ title, content }),
@@ -41,12 +42,13 @@ export function NotesForm({ note }: { note?: any }) {
 
             if (res.ok) {
                 setShowSuccess(true);
-                router.refresh(); // Refresca datos del servidor
-                router.push("/");   // Nos regresa al inicio
+                router.refresh();
+                // Volver al inicio tras editar
+                router.push("/");
             }
 
         } else {
-            // ==> MODO CREACIÓN (POST)
+            // MODO CREACIÓN (POST)
             const res = await fetch('/api/notes', {
                 method: 'POST',
                 body: JSON.stringify({ title, content }),
@@ -56,7 +58,7 @@ export function NotesForm({ note }: { note?: any }) {
             if (res.ok) {
                 setShowSuccess(true);
                 setTitle("");
-                setContent("");
+                setContent(""); // Limpia el editor
                 router.refresh();
                 setTimeout(() => setShowSuccess(false), 3000);
             }
@@ -73,7 +75,6 @@ export function NotesForm({ note }: { note?: any }) {
                     <div className={`${styles.dot} ${styles.green}`}></div>
                 </div>
 
-                {/* Título Dinámico: "Editar" o "Nueva" */}
                 <h2 className={styles.title}>
                     {note ? "Editar Nota" : "NOTESCOL - NUEVA NOTA"}
                 </h2>
@@ -90,18 +91,19 @@ export function NotesForm({ note }: { note?: any }) {
                     />
                 </div>
 
-                <div className={styles.inputGroup}>
-                    <label htmlFor="content" className={styles.label}>Contenido</label>
-                    <textarea
-                        id="content"
-                        placeholder="Escribe los detalles aquí..."
-                        className={styles.textarea}
+                {/* MdEditor en vez de textarea */}
+                <div className={styles.inputGroup} style={{ marginBottom: '1.5rem' }}>
+                    <label className={styles.label} style={{ marginBottom: '0.5rem', display: 'block' }}>
+                        Contenido (Markdown)
+                    </label>
+
+                    {/* El editor recibe 'value' y 'onChange' igual que un input */}
+                    <MdEditor
                         value={content}
-                        onChange={(e) => setContent(e.target.value)}
+                        onChange={setContent}
                     />
                 </div>
 
-                {/* Botón Dinámico: "Actualizar" o "Guardar" */}
                 <button type="submit" className={styles.button}>
                     {note ? "Actualizar Nota" : "Guardar Nota"}
                 </button>
@@ -114,7 +116,6 @@ export function NotesForm({ note }: { note?: any }) {
                         <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                         <polyline points="22 4 12 14.01 9 11.01"></polyline>
                     </svg>
-                    {/* Mensaje Dinámico */}
                     <span>{note ? "Nota actualizada con éxito" : "Nota agregada con éxito"}</span>
                 </div>
             )}
@@ -130,7 +131,6 @@ export function NotesForm({ note }: { note?: any }) {
                     <span>Completa todos los campos</span>
                 </div>
             )}
-
         </form>
     );
 }

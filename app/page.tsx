@@ -23,7 +23,7 @@ async function HomePage() {
         <NotesForm />
       </div>
 
-      {/* Sección de la Lista de Notas (Grid) */}
+      {/*Lista de Notas EN GRID */}
       <div style={{
         width: '100%',
         maxWidth: '1000px',
@@ -32,7 +32,7 @@ async function HomePage() {
         gap: '1.5rem'
       }}>
 
-        {/* Mapeamos las notas y usamos el componente cliente NoteCard */}
+        {/* Mapea las nota y usamos el componente cliente NoteCard */}
         {notes.map((note: any) => (
           <NoteCard key={note.id} note={note} />
         ))}

@@ -2,12 +2,12 @@ import { NotesForm } from "@/components/NotesForm";
 import { prisma } from "@/libs/prisma";
 import { redirect } from "next/navigation";
 
-// 1. Definimos la interfaz correcta para Next.js 
+//Definimos la interfaz 
 interface Props {
     params: Promise<{ id: string }>;
 }
 
-// 2. Función para cargar nota con manejo de errores
+//Función para cargar nota con manejo de errores
 async function loadNote(id: string) {
     // Validamos que el ID sea un número válido antes de llamar a Prisma
     const noteId = Number(id);
@@ -26,14 +26,14 @@ async function loadNote(id: string) {
 }
 
 export default async function EditPage({ params }: Props) {
-    // 3. Esperamos a que params se resuelva (Clave del error)
+    // Esperamos a que params se resuelva (Clave del error)
     const resolvedParams = await params;
     const id = resolvedParams.id;
 
-    // 4. Ahora sí cargamos la nota con el ID ya extraído
+    // Ahora sí cargamos la nota con el ID ya extraído
     const note = await loadNote(id);
 
-    // 5. Si no existe, redirigimos o mostramos error
+    // Si no existe, redirigimos o mostramos error
     if (!note) {
         return (
             <div style={{ color: 'red', textAlign: 'center', marginTop: '50px' }}>

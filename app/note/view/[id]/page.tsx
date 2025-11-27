@@ -1,14 +1,15 @@
 import { prisma } from "@/libs/prisma";
 import Link from "next/link";
+// Importamos el visualizador de Markdown
+import MdViewer from "@/components/MdViewer";
 
-// 1. Interfaz para Next.js 15
 interface Props {
     params: Promise<{ id: string }>;
 }
 
-// 2. Carga de datos (Server Side)
+//Carga de datos (Server Side)
 async function loadNote(id: string) {
-    // Convertimos ID a número y validamos
+    //Convertimos ID a número y validamos
     const noteId = Number(id);
     if (isNaN(noteId)) return null;
 
@@ -57,6 +58,7 @@ export default async function ViewNotePage({ params }: Props) {
                     ← Volver a la lista
                 </Link>
 
+                {/* Título de la Nota */}
                 <h1 style={{
                     fontSize: '2.5rem',
                     marginBottom: '1.5rem',
@@ -69,15 +71,14 @@ export default async function ViewNotePage({ params }: Props) {
 
                 <hr style={{ border: '0', borderTop: '1px solid #eee', margin: '1.5rem 0' }} />
 
-                <p style={{
+
+                <div style={{
                     fontSize: '1.1rem',
                     lineHeight: '1.8',
-                    color: '#333',
-                    whiteSpace: 'pre-wrap',
-                    wordWrap: 'break-word'
+                    marginTop: '1rem'
                 }}>
-                    {note.content}
-                </p>
+                    <MdViewer content={note.content} />
+                </div>
 
                 {/* Botón para Editar esta nota específica */}
                 <div style={{ marginTop: '3rem' }}>

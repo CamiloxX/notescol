@@ -27,8 +27,9 @@ export function NoteCard({ note }: { note: any }) {
     };
 
     return (
+        // Contenedor de la tarjeta
         <div
-            onClick={handleViewNote} // 👈 AL HACER CLICK EN LA CAJA, VEMOS LA NOTA
+            onClick={handleViewNote}
             style={{
                 backgroundColor: '#ffffff',
                 color: '#333333',
@@ -46,6 +47,7 @@ export function NoteCard({ note }: { note: any }) {
             onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-4px)'}
             onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
         >
+            // Contenedor de la tarjeta
             <div style={{ display: "flex", justifyContent: "space-between", marginBottom: '0.5rem' }}>
                 <h3 style={{
                     marginTop: 0,
@@ -88,7 +90,7 @@ export function NoteCard({ note }: { note: any }) {
                 {note.content}
             </p>
 
-            {/* Texto pequeñito abajo que dice "Leer más" */}
+
             <span style={{ fontSize: '0.8rem', color: '#999', marginTop: 'auto', paddingTop: '10px' }}>
                 Leer nota completa...
             </span>
