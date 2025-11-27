@@ -33,7 +33,7 @@ Breve descripción de los archivos clave implementados:
 - `src/app/page.tsx`: Página principal (Home) que lista todas las notas (Server Component).
 - `src/app/note/[id]/page.tsx`: Página para **Editar** notas existente.
 - `src/app/note/view/[id]/page.tsx`: Página para **Visualizar** el contenido completo de la nota.
-- `src/components/NotesForm.tsx`: Formulario inteligente que maneja tanto la creación (POST) como la edición (PUT).
+- `src/components/NotesForm.tsx`: Formulario  que maneja tanto la creación (POST) como la edición (PUT).
 - `src/components/MdEditor.tsx`: Componente del editor Markdown con carga dinámica (`ssr: false`) para compatibilidad con Next.js.
 - `src/app/api/notes`: Endpoints del Backend (GET, POST, PUT, DELETE).
 
