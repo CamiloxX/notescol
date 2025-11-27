@@ -1,15 +1,46 @@
-import { PrismaClient } from '@prisma/client'
+import { NextResponse } from "next/server";
+import { prisma } from "@/app/libs/prisma";
 
-const prismaClientSingleton = () => {
-    return new PrismaClient()
+export async function GET() {
+    try {
+        const notes = await prisma.note.findMany();
+        return NextResponse.json(notes);
+    } catch (error) {
+        if (error instanceof Error) {
+            return NextResponse.json(
+                {
+                    message: error.message,
+                },
+                {
+                    status: 500,
+                }
+            );
+        }
+    }
 }
 
-declare global {
-    var prismaGlobal: undefined | ReturnType<typeof prismaClientSingleton>
+export async function POST(request: Request) {
+    try {
+        const { title, content } = await request.json();
+
+        const newNote = await prisma.note.create({
+            data: {
+                title,
+                content,
+            },
+        });
+
+        return NextResponse.json(newNote);
+    } catch (error) {
+        if (error instanceof Error) {
+            return NextResponse.json(
+                {
+                    message: error.message,
+                },
+                {
+                    status: 500,
+                }
+            );
+        }
+    }
 }
-
-const prisma = globalThis.prismaGlobal ?? prismaClientSingleton()
-
-export default prisma
-
-if (process.env.NODE_ENV !== 'production') globalThis.prismaGlobal = prisma
