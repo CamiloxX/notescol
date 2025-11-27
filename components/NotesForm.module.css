@@ -1,0 +1,111 @@
+.formContainer {
+    background-color: #ffffff;
+    padding: 1.5rem;
+    border-radius: 16px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.06);
+    border: 1px solid #ffffff;
+    position: relative;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.macHeader {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.red {
+    background-color: #ff5f57 !important;
+    border: 1px solid #e0443e;
+}
+
+.yellow {
+    background-color: #febc2e !important;
+    border: 1px solid #d89e24;
+}
+
+.green {
+    background-color: #28c840 !important;
+    border: 1px solid #1aab29;
+}
+
+/* --- Tipografía --- */
+.title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #1a1a1a;
+    margin-bottom: 1.2rem;
+    text-align: center;
+}
+
+.inputGroup {
+    margin-bottom: 1rem;
+}
+
+.label {
+    display: block;
+    margin-bottom: 0.4rem;
+    font-size: 0.85rem;
+    color: #555;
+    font-weight: 600;
+}
+
+.input,
+.textarea {
+    width: 100%;
+    padding: 10px 14px;
+    border: 2px solid #eeeff2;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+    outline: none;
+    background-color: #f8f9fa;
+    color: #333;
+    box-sizing: border-box;
+}
+
+.input:focus,
+.textarea:focus {
+    border-color: #0070f3;
+    background-color: #fff;
+    box-shadow: 0 0 0 3px rgba(0, 112, 243, 0.1);
+}
+
+.textarea {
+    min-height: 100px;
+    resize: vertical;
+    font-family: inherit;
+}
+
+.button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #0070f3 0%, #00a6ff 100%);
+    color: white;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-top: 0.5rem;
+}
+
+.button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 112, 243, 0.3);
+}
+
+.button:active {
+    transform: translateY(0);
+}
