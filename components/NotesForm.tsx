@@ -1,19 +1,82 @@
 "use client";
-
 import styles from "./NotesForm.module.css";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
-export function NotesForm() {
+export function NotesForm({ note }: { note?: any }) {
+
+    const [title, setTitle] = useState("");
+    const [content, setContent] = useState("");
+    const [showSuccess, setShowSuccess] = useState(false);
+    const [showError, setShowError] = useState(false);
+
+    const router = useRouter();
+
+    // Rellena el formulario cuando llega una nota para editar
+    useEffect(() => {
+        if (note) {
+            setTitle(note.title);
+            setContent(note.content);
+        }
+    }, [note]);
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        // --- VALIDACIÓN ---
+        if (!title.trim() || !content.trim()) {
+            setShowError(true);
+            setTimeout(() => setShowError(false), 3000);
+            return;
+        }
+
+        // --- LÓGICA DIFERENCIADA ---
+        if (note) {
+            // ==> MODO EDICIÓN (PUT)
+            const res = await fetch(`/api/notes/${note.id}`, {
+                method: 'PUT',
+                body: JSON.stringify({ title, content }),
+                headers: { 'Content-Type': 'application/json' }
+            });
+
+            if (res.ok) {
+                setShowSuccess(true);
+                router.refresh(); // Refresca datos del servidor
+                router.push("/");   // Nos regresa al inicio
+            }
+
+        } else {
+            // ==> MODO CREACIÓN (POST)
+            const res = await fetch('/api/notes', {
+                method: 'POST',
+                body: JSON.stringify({ title, content }),
+                headers: { 'Content-Type': 'application/json' }
+            });
+
+            if (res.ok) {
+                setShowSuccess(true);
+                setTitle("");
+                setContent("");
+                router.refresh();
+                setTimeout(() => setShowSuccess(false), 3000);
+            }
+        }
+    };
+
     return (
-        <div className={styles.formContainer}>
+        <form onSubmit={handleSubmit} noValidate>
+            <div className={styles.formContainer}>
 
-            <div className={styles.macHeader}>
-                <div className={`${styles.dot} ${styles.red}`}></div>
-                <div className={`${styles.dot} ${styles.yellow}`}></div>
-                <div className={`${styles.dot} ${styles.green}`}></div>
-            </div>
+                <div className={styles.macHeader}>
+                    <div className={`${styles.dot} ${styles.red}`}></div>
+                    <div className={`${styles.dot} ${styles.yellow}`}></div>
+                    <div className={`${styles.dot} ${styles.green}`}></div>
+                </div>
 
-            <h2 className={styles.title}>Nueva Nota</h2>
-            <form>
+                {/* Título Dinámico: "Editar" o "Nueva" */}
+                <h2 className={styles.title}>
+                    {note ? "Editar Nota" : "NOTESCOL - NUEVA NOTA"}
+                </h2>
 
                 <div className={styles.inputGroup}>
                     <label htmlFor="title" className={styles.label}>Título</label>
@@ -22,6 +85,8 @@ export function NotesForm() {
                         id="title"
                         placeholder="Ej: Idea millonaria..."
                         className={styles.input}
+                        value={title}
+                        onChange={(e) => setTitle(e.target.value)}
                     />
                 </div>
 
@@ -31,14 +96,41 @@ export function NotesForm() {
                         id="content"
                         placeholder="Escribe los detalles aquí..."
                         className={styles.textarea}
+                        value={content}
+                        onChange={(e) => setContent(e.target.value)}
                     />
                 </div>
 
-                <button type="button" className={styles.button}>
-                    Guardar Nota
+                {/* Botón Dinámico: "Actualizar" o "Guardar" */}
+                <button type="submit" className={styles.button}>
+                    {note ? "Actualizar Nota" : "Guardar Nota"}
                 </button>
+            </div>
 
-            </form>
-        </div>
+            {/* --- POP-UP DE ÉXITO --- */}
+            {showSuccess && (
+                <div className={styles.toast}>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: '#4ade80', marginRight: '8px' }}>
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                    {/* Mensaje Dinámico */}
+                    <span>{note ? "Nota actualizada con éxito" : "Nota agregada con éxito"}</span>
+                </div>
+            )}
+
+            {/* --- POP-UP DE ERROR --- */}
+            {showError && (
+                <div className={styles.toast} style={{ borderLeft: '4px solid #ff5f57' }}>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: '#ff5f57', marginRight: '8px' }}>
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="15" y1="9" x2="9" y2="15"></line>
+                        <line x1="9" y1="9" x2="15" y2="15"></line>
+                    </svg>
+                    <span>Completa todos los campos</span>
+                </div>
+            )}
+
+        </form>
     );
 }

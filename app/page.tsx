@@ -1,5 +1,7 @@
 import { NotesForm } from "@/components/NotesForm";
+import { NoteCard } from "@/components/NoteCard";
 
+// Función para cargar las notas desde el servidor
 async function loadNotes() {
   const response = await fetch("http://localhost:3000/api/notes", { cache: 'no-store' });
   const notes = await response.json();
@@ -10,10 +12,9 @@ async function HomePage() {
   const notes = await loadNotes();
 
   return (
-
     <div style={{ padding: '2rem', display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
 
-
+      {/* Sección del Formulario */}
       <div style={{
         width: '100%',
         maxWidth: '400px',
@@ -22,6 +23,7 @@ async function HomePage() {
         <NotesForm />
       </div>
 
+      {/* Sección de la Lista de Notas (Grid) */}
       <div style={{
         width: '100%',
         maxWidth: '1000px',
@@ -30,39 +32,9 @@ async function HomePage() {
         gap: '1.5rem'
       }}>
 
+        {/* Mapeamos las notas y usamos el componente cliente NoteCard */}
         {notes.map((note: any) => (
-          <div key={note.id} style={{
-            backgroundColor: '#ffffff',
-            color: '#333333',
-            padding: '1.5rem',
-            borderRadius: '16px',
-            boxShadow: '0 4px 6px rgba(0,0,0,0.05)',
-            border: '1px solid #eaeaea',
-            transition: 'transform 0.2s'
-          }}>
-
-            {/* Título de la nota */}
-            <h3 style={{
-              marginTop: 0,
-              marginBottom: '0.5rem',
-              fontSize: '1.1rem',
-              fontWeight: 'bold',
-              color: '#000'
-            }}>
-              {note.title}
-            </h3>
-
-            {/* Contenido de la nota */}
-            <p style={{
-              margin: 0,
-              fontSize: '0.95rem',
-              lineHeight: '1.5',
-              color: '#555'
-            }}>
-              {note.content}
-            </p>
-
-          </div>
+          <NoteCard key={note.id} note={note} />
         ))}
 
       </div>
